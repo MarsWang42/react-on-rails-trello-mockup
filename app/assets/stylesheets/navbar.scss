@@ -13,3 +13,11 @@
 .register-form-button {
   width: 100%;
 }
+.navbar {
+  list-style-type: none;
+  height: 50px;
+  background: #fb8a0b;
+  -moz-box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.16);
+  -webkit-box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.16);
+}

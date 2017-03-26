@@ -1,10 +1,13 @@
 import React, { Component, PropTypes } from 'react';
-import { Modal, Button, Menu, Icon, Affix, Input } from 'antd';
+import { Modal, Button, Dropdown, Menu, Icon, Affix, Input, Collapse } from 'antd';
+import { browserHistory } from 'react-router';
 import SignInForm from './User/SignInForm';
 import SignUpForm from './User/SignUpForm';
+import NewBoardForm from './Board/NewBoardForm';
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
+const Panel = Collapse.Panel;
 
 class Navbar extends Component {
   constructor(props) {
@@ -12,11 +15,14 @@ class Navbar extends Component {
     this.state = {
       signInVisible: false,
       signUpVisible: false,
+      boardVisible: false,
     };
     this.showSignInModal = this.showSignInModal.bind(this);
     this.showSignUpModal = this.showSignUpModal.bind(this);
     this.hideSignInModal = this.hideSignInModal.bind(this);
     this.hideSignUpModal = this.hideSignUpModal.bind(this);
+    this.hideBoardModal = this.hideBoardModal.bind(this);
+    this.showBoardModal = this.showBoardModal.bind(this);
   }
 
   showSignInModal() {
@@ -45,6 +51,18 @@ class Navbar extends Component {
     });
   }
 
+  showBoardModal() {
+    this.setState({
+      boardVisible: true,
+    });
+  }
+
+  hideBoardModal() {
+    this.setState({
+      boardVisible: false,
+    });
+  }
+
   render() {
     const {
       user: {
@@ -60,6 +78,7 @@ class Navbar extends Component {
       logoutUser,
       loginUser,
       registerUser,
+      createBoard,
     } = this.props;
 
     return (
@@ -68,9 +87,13 @@ class Navbar extends Component {
           onClick={this.handleClick}
           selectedKeys={[this.state.current]}
           mode="horizontal"
+          className="navbar"
         >
           <Menu.Item key="logo">
-            <a href="/" className="navbar-logo" rel="noopener noreferrer">React App</a>
+            <a
+              onClick={() => browserHistory.push('/')}
+              href="/" className="navbar-logo" rel="noopener noreferrer"
+            >React App</a>
           </Menu.Item>
           { !isSignedIn &&
             <Menu.Item key="signup" className="float-right">
@@ -107,8 +130,9 @@ class Navbar extends Component {
           }
           { isSignedIn &&
             <SubMenu
-              title={<span><Icon type="setting" />Hello,&nbsp;<span className="caret">{currentUser && currentUser.username}</span></span>}
-              className="float-right">
+              title={<span><Icon type="setting" />{currentUser && currentUser.username}</span>}
+              className="float-right"
+            >
               <Menu.Item key="setting">
                 <a href={editPath}>Settings</a>
               </Menu.Item>
@@ -116,6 +140,19 @@ class Navbar extends Component {
                 <a onClick={() => logoutUser(csrfToken)}>Logout</a>
               </Menu.Item>
             </SubMenu>
+          }
+          { isSignedIn &&
+            <Menu.Item key="board" className="float-right">
+              <a onClick={this.showBoardModal}>
+                <Icon type="plus-square-o" />Create a Board
+              </a>
+              <Modal
+                title="Create Board" visible={this.state.boardVisible && isSignedIn}
+                onCancel={this.hideBoardModal} footer={null}
+              >
+                <NewBoardForm onFormSubmit={createBoard} hideBoardModal={this.hideBoardModal} />
+              </Modal>
+            </Menu.Item>
           }
         </Menu>
       </Affix>

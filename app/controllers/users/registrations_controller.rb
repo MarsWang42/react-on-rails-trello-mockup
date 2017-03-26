@@ -16,7 +16,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
               :currentUser => user.as_json
             }, :status => 201
           else
-            warden.custom_failure!
             render :json => {
               :error => user.errors
             }, :status => 422
