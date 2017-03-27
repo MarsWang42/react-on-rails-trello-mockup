@@ -26,8 +26,15 @@ class NewBoardForm extends React.Component {
     });
   }
 
+  isLoading() {
+    const { isCreating, creatingError } = this.props;
+    if (isCreating && !creatingError) return "validating";
+    else if (creatingError) return "error";
+    return "";
+  }
+
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { form, creatingError } = this.props;
     const labelStyle = {
       fontSize: "15px",
       fontWeight: 500,
@@ -36,15 +43,25 @@ class NewBoardForm extends React.Component {
     };
     return (
       <Form onSubmit={this.handleSubmit} className="login-form">
-        <label style={labelStyle}>Title: </label>
-        <FormItem>
-          {getFieldDecorator('title', {
+        <label style={labelStyle} htmlFor="title">Title: </label>
+        <FormItem validateStatus={this.isLoading()} hasFeedback>
+          {form.getFieldDecorator('title', {
             rules: [{ required: true, message: 'Please input title for the new Board!' }],
           })(
-            <Input placeholder='Like "New Book"' />
+            <Input placeholder='Like "New Book"' />,
           )}
         </FormItem>
         <FormItem>
+          {
+            creatingError && (
+              <Alert
+                message="Error"
+                description={creatingError}
+                type="error"
+                closable
+              />
+            )
+          }
           <Button type="primary" htmlType="submit" className="login-form-button">
             Create
           </Button>

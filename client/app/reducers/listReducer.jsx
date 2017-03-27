@@ -2,6 +2,9 @@ import {
   LOAD_ALL_LISTS,
   LOAD_ALL_LISTS_SUCCEED,
   LOAD_ALL_LISTS_FAILED,
+  CREATE_LIST,
+  CREATE_LIST_SUCCEED,
+  CREATE_LIST_FAILED,
 } from '../constants/listConstants';
 
 import {
@@ -26,6 +29,19 @@ const ListReducer = (state = '', action) => {
       return { ...state,
         isLoading: false,
         all: [],
+      };
+    case CREATE_LIST:
+      return { ...state,
+        isCreating: true,
+      };
+    case CREATE_LIST_SUCCEED:
+      return { ...state,
+        isCreating: false,
+      };
+    case CREATE_LIST_FAILED:
+      return { ...state,
+        isCreating: false,
+        creatingError: action.data.error,
       };
     default:
       return state;

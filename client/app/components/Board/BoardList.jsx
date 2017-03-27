@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Card, Col, Icon, Modal } from 'antd';
+import { Row, Card, Col, Icon, Modal, Alert } from 'antd';
 import BoardCard from './BoardCard';
 import NewBoardForm from './NewBoardForm';
 import Spinner from '../Tools/Spinner';
@@ -31,7 +31,11 @@ export default class BoardList extends Component {
   }
 
   render() {
-    const { isSignedIn, boards, isLoading, createBoard, currentUser } = this.props;
+    const {
+      isSignedIn, boards, isLoading,
+      createBoard, currentUser, loadingError,
+      isCreating, creatingError,
+    } = this.props;
     const boardList = boards ? boards.map(board => <BoardCard board={board} key={board.id} />) : [];
     boardList.push(
       <Col xs={12} sm={8} md={6} key="createCard">
@@ -43,7 +47,12 @@ export default class BoardList extends Component {
             title="Create Board" visible={this.state.boardVisible}
             onCancel={this.hideBoardModal} footer={null}
           >
-            <NewBoardForm onFormSubmit={createBoard} hideBoardModal={this.hideBoardModal} />
+            <NewBoardForm
+              onFormSubmit={createBoard}
+              hideBoardModal={this.hideBoardModal}
+              isCreating={isCreating}
+              creatingError={creatingError}
+            />
           </Modal>
         </Card>
       </Col>,
@@ -53,11 +62,21 @@ export default class BoardList extends Component {
         <h1 style={{ margin: "15px 10px" }}>Hello {currentUser.username}</h1>
         <h4 style={{ margin: "15px 15px" }}>Please select a board or create a new one.</h4>
         <hr />
-        <Row>
-          { isLoading ? <div style={{ height: "300px" }}><Spinner /></div> :
-            boardList
-          }
-        </Row>
+        { !loadingError ? (
+            <Row>
+              { isLoading ? <div style={{ height: "300px" }}><Spinner /></div> :
+                boardList
+              }
+            </Row>
+        ) : (
+          <Alert
+            message="Error Text"
+            description={loadingError}
+            type="error"
+            closable
+          />
+        )
+        }
       </div>
     );
   }

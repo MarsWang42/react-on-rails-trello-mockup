@@ -21,7 +21,7 @@ export default class ListCard extends Component {
   }
 
   render() {
-    const { list, createTask, boardId } = this.props;
+    const { list, createTask, boardId, isCreatingTask, creatingTaskError } = this.props;
     const cardStyle = {
       margin: "10px",
       width: "250px",
@@ -50,6 +50,8 @@ export default class ListCard extends Component {
         listId={list.id}
         boardId={boardId}
         hideDropdown={this.hideNewTaskDropdown}
+        isCreating={isCreatingTask}
+        creatingError={creatingTaskError}
       />
     );
     taskList.push(

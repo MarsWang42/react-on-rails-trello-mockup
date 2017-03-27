@@ -26,8 +26,15 @@ class NewListForm extends React.Component {
     });
   }
 
+  isLoading() {
+    const { isCreating, creatingError } = this.props;
+    if (isCreating && !creatingError) return "validating";
+    else if (creatingError) return "error";
+    return "";
+  }
+
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { form, creatingError } = this.props;
     const labelStyle = {
       fontSize: "15px",
       fontWeight: 500,
@@ -37,14 +44,24 @@ class NewListForm extends React.Component {
     return (
       <Form onSubmit={this.handleSubmit} className="new-list-form">
         <label style={labelStyle}>List Title: </label>
-        <FormItem>
-          {getFieldDecorator('title', {
+        <FormItem validateStatus={this.isLoading()} hasFeedback>
+          {form.getFieldDecorator('title', {
             rules: [{ required: true, message: 'Please input title for the new List!' }],
           })(
             <Input placeholder='Like "New Book"' />
           )}
         </FormItem>
         <FormItem>
+          {
+            creatingError && (
+              <Alert
+                message="Error"
+                description={creatingError}
+                type="error"
+                closable
+              />
+            )
+          }
           <Button type="primary" htmlType="submit" className="new-list-form-button">
             Create
           </Button>

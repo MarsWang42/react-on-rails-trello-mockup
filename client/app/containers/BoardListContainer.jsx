@@ -9,6 +9,9 @@ const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
   boards: state.board.list,
   isLoading: state.board.isLoading,
+  loadingError: state.board.error,
+  isCreating: state.board.isCreating,
+  creatingError: state.board.creatingError,
 });
 
 // Don't forget to actually use connect!

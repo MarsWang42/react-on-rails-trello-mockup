@@ -51,7 +51,12 @@ export default class BoardList extends Component {
   }
 
   render() {
-    const { isSignedIn, lists, isLoading, createList, createTask, params, currentBoard } = this.props;
+    const {
+      isSignedIn, lists, isLoading,
+      createList, createTask, params,
+      currentBoard, isCreatingList, isCreatingTask,
+      creatingTaskError, creatingListError,
+    } = this.props;
     const cardStyle = {
       margin: "10px",
       width: "300px",
@@ -64,12 +69,20 @@ export default class BoardList extends Component {
         onFormSubmit={createList}
         boardId={params.id}
         hideDropdown={this.hideNewListDropdown}
+        isCreating={isCreatingList}
+        creatingError={creatingListError}
       />
     );
     const listIndex = lists ?
-      lists.map(list =>
-        <ListCard list={list} key={list.id} createTask={createTask} boardId={currentBoard.id} />,
-      ) : [];
+      lists.map(list => (
+        <ListCard
+          list={list}
+          key={list.id}
+          createTask={createTask}
+          boardId={currentBoard.id}
+          isCreatingTask={isCreatingTask}
+          creatingTaskError={creatingTaskError}
+        />)) : [];
     listIndex.push(
       <Card style={cardStyle} key="createlist">
         <Dropdown

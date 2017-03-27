@@ -22,6 +22,11 @@ export const loadBoardList = () => (
         type: LOAD_BOARD_LIST_SUCCEED,
         data: response.data,
       });
+    }).catch((response) => {
+      dispatch({
+        type: LOAD_BOARD_LIST_FAILED,
+        data: response.data,
+      });
     });
   }
 );
@@ -37,20 +42,31 @@ export const loadBoardDetail = id => (
         type: LOAD_BOARD_DETAIL_SUCCEED,
         data: response.data,
       });
+    }).catch((response) => {
+      dispatch({
+        type: LOAD_BOARD_DETAIL_FAILED,
+        data: response.response.data,
+      });
     });
   }
 );
 
 export const createBoard = ({ title }, hideBoardModal) => (
   (dispatch) => {
-    dispatch({ type: CREATE_BOARD});
+    dispatch({ type: CREATE_BOARD });
     axios({
       method: "POST",
       url: "/boards",
       data: { title },
     }).then((response) => {
       hideBoardModal();
+      dispatch({ type: CREATE_BOARD_SUCCEED })
       dispatch(loadBoardList());
+    }).catch((response) => {
+      dispatch({
+        type: CREATE_BOARD_FAILED,
+        data: response.response.data,
+      });
     });
   }
 );

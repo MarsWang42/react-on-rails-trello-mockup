@@ -42,7 +42,7 @@ class TasksController < ApplicationController
         :task => task
       }, :status => 200
     else render :json => {
-      :error => task.error
+      :error => task.errors
     }, :status => 404
     end
   end
