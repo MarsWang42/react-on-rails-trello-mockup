@@ -7,4 +7,6 @@ class User < ApplicationRecord
   validates_presence_of :username
   validates_uniqueness_of :username
   has_and_belongs_to_many :boards
+  has_many :lists
+  has_many :tasks
 end

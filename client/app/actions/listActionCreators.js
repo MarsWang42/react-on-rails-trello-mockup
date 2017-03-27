@@ -7,32 +7,19 @@ import {
   CREATE_LIST_SUCCEED,
   CREATE_LIST_FAILED,
 } from '../constants/listConstants';
+import { loadBoardDetail } from './boardActionCreators';
 
-export const loadAllLists = (id) => (
-  (dispatch) => {
-    dispatch({ type: LOAD_ALL_LISTS });
-    axios({
-      method: "GET",
-      url: `/boards/${id}`,
-    }).then((response) => {
-      dispatch({
-        type: LOAD_ALL_LISTS_SUCCEED,
-        data: response.data,
-      });
-    });
-  }
-);
 
-export const createBoard = ({ title }, hideBoardModal) => (
+export const createList = ({ title }, boardId, hideDropdown) => (
   (dispatch) => {
     dispatch({ type: CREATE_LIST});
     axios({
       method: "POST",
-      url: "/boards",
+      url: `/boards/${boardId}/lists`,
       data: { title },
     }).then((response) => {
-      hideBoardModal();
-      dispatch(loadBoardList());
+      hideDropdown();
+      dispatch(loadBoardDetail(boardId));
     });
   }
 );

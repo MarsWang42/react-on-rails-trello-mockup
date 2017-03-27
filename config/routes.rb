@@ -2,7 +2,11 @@ Rails.application.routes.draw do
   root 'react_app#index'
   get 'board/:id', to: 'react_app#index'
   authenticate :user do
-    resources :boards, only: [:index, :create, :show, :edit, :update, :destroy]
+    resources :boards, only: [:index, :create, :show, :edit, :update, :destroy] do
+      resources :lists, only: [:create], shallow: true do
+        resources :tasks, only: [:create]
+      end
+    end
   end
   devise_for :users, path: "user",
     :controllers => {

@@ -31,8 +31,8 @@ export default class BoardList extends Component {
   }
 
   render() {
-    const { isSignedIn, boards, isLoading, createBoard } = this.props;
-    const boardList = boards ? boards.map(board => <BoardCard board={board} key={board.boardId} />) : [];
+    const { isSignedIn, boards, isLoading, createBoard, currentUser } = this.props;
+    const boardList = boards ? boards.map(board => <BoardCard board={board} key={board.id} />) : [];
     boardList.push(
       <Col xs={12} sm={8} md={6} key="createCard">
         <Card style={{ margin: "10px", backgroundColor: "#f1f1f1" }}>
@@ -50,7 +50,8 @@ export default class BoardList extends Component {
     );
     return (
       <div className="board-list-container">
-        <h1 style={{ margin: "15px 10px" }}>Your boards</h1>
+        <h1 style={{ margin: "15px 10px" }}>Hello {currentUser.username}</h1>
+        <h4 style={{ margin: "15px 15px" }}>Please select a board or create a new one.</h4>
         <hr />
         <Row>
           { isLoading ? <div style={{ height: "300px" }}><Spinner /></div> :

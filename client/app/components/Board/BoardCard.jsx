@@ -12,12 +12,12 @@ export default class BoardCard extends Component {
     };
     return (
       <Col xs={12} sm={8} md={6}>
-      <Card
-        onClick={() => browserHistory.push(`board/${board.boardId}`)}
-        title={board.title}
-        style={{ margin: "10px", cursor: "pointer" }}
-        bodyStyle={bodyStyle}
-      >
+        <Card
+          onClick={() => browserHistory.push(`board/${board.id}`)}
+          title={board.title}
+          style={{ margin: "10px", cursor: "pointer" }}
+          bodyStyle={bodyStyle}
+        >
           Updated { board.updatedAt }
         </Card>
       </Col>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170326163114) do
+ActiveRecord::Schema.define(version: 20170326213748) do
 
   create_table "boards", force: :cascade do |t|
     t.string   "title"
@@ -30,7 +30,19 @@ ActiveRecord::Schema.define(version: 20170326163114) do
     t.integer  "board_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "user_id"
     t.index ["board_id"], name: "index_lists_on_board_id"
+    t.index ["user_id"], name: "index_lists_on_user_id"
+  end
+
+  create_table "tasks", force: :cascade do |t|
+    t.string   "title"
+    t.integer  "list_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["list_id"], name: "index_tasks_on_list_id"
+    t.index ["user_id"], name: "index_tasks_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -48,8 +60,10 @@ ActiveRecord::Schema.define(version: 20170326163114) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.integer  "board_id"
+    t.integer  "lists_id"
     t.index ["board_id"], name: "index_users_on_board_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["lists_id"], name: "index_users_on_lists_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

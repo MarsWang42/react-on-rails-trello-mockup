@@ -1,5 +1,4 @@
-class BoardsController < ApplicationController
-  include ActionView::Helpers::DateHelper
+class TasksController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
@@ -18,8 +17,8 @@ class BoardsController < ApplicationController
     begin
       board = current_user.boards.find(params[:id])
       render :json => {
-        :currentBoard => board,
-        :lists => board.lists.map {|list| {
+        :title => board.title,
+        :tasks => board.lists.map {|list| {
           :title => list.title,
           :tasks => list.tasks,
           :id => list.id,
@@ -27,29 +26,29 @@ class BoardsController < ApplicationController
       }, :status => 200
     rescue
       render :json => {
-        :error => "Board cannot be found."
+        :error => "List cannot be found."
       }, :status => 404
     end
   end
 
   def create
     respond_to :json, :html
-    board = Board.new(board_params)
-    board.users << current_user
-    if board.save
+    task = Task.new(task_params)
+    list = List.find(params[:list_id])
+    task.list = list
+    task.user = current_user
+    if task.save
       render :json => {
-        :board => board
-      }, :status => 201
-    else
-      warden.custom_failure!
-      render :json => {
-        :error => board.errors
-      }, :status => 422
+        :task => task
+      }, :status => 200
+    else render :json => {
+      :error => task.error
+    }, :status => 404
     end
   end
 
   private
-    def board_params
-      params.require(:board).permit(:title)
+    def task_params
+      params.require(:task).permit(:title)
     end
 end

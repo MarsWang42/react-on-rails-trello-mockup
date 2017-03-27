@@ -2,5 +2,9 @@
   margin: 20px;
 }
 .board-detail-container {
-
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.board-detail-title {
+  padding: 15px 25px;
 }
