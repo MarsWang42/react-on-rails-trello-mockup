@@ -1,32 +1,36 @@
 class TasksController < ApplicationController
   skip_before_action :verify_authenticity_token
+  include ActionView::Helpers::DateHelper
 
   def index
     respond_to :json, :html
     render :json => {
       :boards => current_user.boards.map {|board| {
-       :title => board.title,
-       :updatedAt => "#{distance_of_time_in_words_to_now(board.updated_at)} ago",
-       :id => board.id
-      }}
-    }, :status => 200
+      :title => board.title,
+      :updatedAt => "#{distance_of_time_in_words_to_now(board.updated_at)} ago",
+      :id => board.id
+    }}}, :status => 200
   end
 
   def show
     respond_to :json, :html
     begin
-      board = current_user.boards.find(params[:id])
+      task = Task.find(params[:id])
       render :json => {
-        :title => board.title,
-        :tasks => board.lists.map {|list| {
-          :title => list.title,
-          :tasks => list.tasks,
-          :id => list.id,
-        }}
+        :task => {
+          :id => task.id,
+          :title => task.title,
+          :belongsTo => {
+            :id => task.list.id,
+            :title => task.list.title
+          },
+          :updatedAt => "#{distance_of_time_in_words_to_now(task.updated_at)} ago",
+          :createdBy => task.creator.username
+        }
       }, :status => 200
     rescue
       render :json => {
-        :error => "List cannot be found."
+        :error => "Task cannot be found."
       }, :status => 404
     end
   end
@@ -36,7 +40,11 @@ class TasksController < ApplicationController
     task = Task.new(task_params)
     list = List.find(params[:list_id])
     task.list = list
-    task.user = current_user
+    task.board = list.board
+    task.creator = current_user
+    # make sure list and board are recoreded
+    list.board.touch
+    list.touch
     if task.save
       render :json => {
         :task => task

@@ -5,8 +5,8 @@ export default class App extends Component {
   componentDidMount() {
     const pathRegex = /^\/board/;
     if (this.props.location.pathname.match(pathRegex)) {
-      document.body.className += "red-gradient-background";
-    } else document.body.className = "";
+      document.body.className = "red-gradient-background";
+    } else document.body.className = "body-background";
   }
 
   render() {

@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170326213748) do
+ActiveRecord::Schema.define(version: 20170327224829) do
+
+  create_table "archived_tasks", force: :cascade do |t|
+    t.string   "title"
+    t.integer  "archived_by_id"
+    t.integer  "board_id"
+    t.integer  "list_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["archived_by_id"], name: "index_archived_tasks_on_archived_by_id"
+    t.index ["board_id"], name: "index_archived_tasks_on_board_id"
+    t.index ["list_id"], name: "index_archived_tasks_on_list_id"
+  end
 
   create_table "boards", force: :cascade do |t|
     t.string   "title"
@@ -37,12 +49,16 @@ ActiveRecord::Schema.define(version: 20170326213748) do
 
   create_table "tasks", force: :cascade do |t|
     t.string   "title"
+    t.integer  "board_id"
     t.integer  "list_id"
-    t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "assignee_id"
+    t.integer  "creator_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
+    t.index ["board_id"], name: "index_tasks_on_board_id"
+    t.index ["creator_id"], name: "index_tasks_on_creator_id"
     t.index ["list_id"], name: "index_tasks_on_list_id"
-    t.index ["user_id"], name: "index_tasks_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|

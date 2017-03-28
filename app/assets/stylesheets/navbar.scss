@@ -16,8 +16,13 @@
 .navbar {
   list-style-type: none;
   height: 50px;
-  background: #fb8a0b;
-  -moz-box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.16);
-  -webkit-box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.16);
-  box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.16);
+  background: -moz-linear-gradient(top,#ffc581 0,#ea5dcc 100%);
+  background: -webkit-gradient(linear,0% 0,0% 100%,from(#ffc581),to(#ea5dcc));
+  background: -webkit-linear-gradient(top,#ffc581 0,#ea5dcc 100%);
+  background: -o-linear-gradient(top,#ffc581 0,#ea5dcc 100%);
+  background: -ms-linear-gradient(top,#ffc581 0,#ea5dcc 100%);
+  background: linear-gradient(top,#ffc581 0,#ea5dcc 100%);
+  -moz-box-shadow: 0 4px 3px 0px rgba(0, 0, 0, 0.16);
+  -webkit-box-shadow: 0 4px 3px 0px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 4px 3px 0px rgba(0, 0, 0, 0.16);
 }

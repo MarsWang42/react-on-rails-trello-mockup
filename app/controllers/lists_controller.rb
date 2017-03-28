@@ -35,6 +35,7 @@ class ListsController < ApplicationController
     respond_to :json, :html
     list = List.new(list_params)
     board = Board.find(params[:board_id])
+    board.touch
     list.board = board
     list.user = current_user
     if list.save

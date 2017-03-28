@@ -8,5 +8,7 @@ class User < ApplicationRecord
   validates_uniqueness_of :username
   has_and_belongs_to_many :boards
   has_many :lists
-  has_many :tasks
+  has_many :assigned_tasks, :class_name => 'Task', :foreign_key => 'assignee_id'
+  has_many :created_tasks, :class_name => 'Task', :foreign_key => 'creator_id'
+  has_many :archived_tasks, :class_name => 'ArchivedTask', :foreign_key => 'archived_by'
 end

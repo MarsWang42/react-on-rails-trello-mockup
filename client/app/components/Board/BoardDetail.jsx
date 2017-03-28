@@ -1,62 +1,117 @@
 import React, { Component } from 'react';
-import { Row, Card, Col, Icon, Dropdown, Menu } from 'antd';
+import { Card, Icon, Dropdown, Modal, Button } from 'antd';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ListCard from '../List/ListCard';
 import NewListForm from '../List/NewListForm';
+import TaskDetail from '../../containers/TaskDetailContainer';
 import Spinner from '../Tools/Spinner';
+import Sidebar from '../../containers/SidebarContainer';
 import EventListener from '../../helpers/eventListener';
+import { generateRandomKey } from '../../helpers/util';
 
 export default class BoardList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       newListDropdownVisible: false,
+      taskDetailVisible: false,
+      sidebarVisible: false,
       height: 0,
+      width: 0,
+      boardDetailMargin: 0,
+      selectedTask: null,
+      taskDetailKey: 0,
     };
+    this.updateSize = this.updateSize.bind(this);
+    this.onResize = this.onResize.bind(this);
     this.handleNewListDropdownChange = this.handleNewListDropdownChange.bind(this);
     this.hideNewListDropdown = this.hideNewListDropdown.bind(this);
-    this.updateHeight = this.updateHeight.bind(this);
-    this.onResizeHeight = this.onResizeHeight.bind(this);
+    this.showTaskDetailModal = this.showTaskDetailModal.bind(this);
+    this.hideTaskDetailModal = this.hideTaskDetailModal.bind(this);
+    this.showSidebar = this.showSidebar.bind(this);
+    this.hideSidebar = this.hideSidebar.bind(this);
   }
 
   componentDidMount() {
     this.props.loadBoardDetail(this.props.params.id);
     const win = window;
-    this.updateHeight();
-    this.eventResizeWidthToken = EventListener.listen(
+    this.updateSize();
+    this.eventResizeToken = EventListener.listen(
       win,
       'resize',
-      this.onResizeHeight,
+      this.onResize,
     );
   }
 
-  onResizeHeight() {
+  onResize() {
     clearTimeout(this.updateTimer);
-    this.updateTimer = setTimeout(this.updateHeight, 16);
+    this.updateTimer = setTimeout(this.updateSize, 16);
   }
 
-  updateHeight() {
-    const win = window;
-    if (win) {
-      const newHeight = (win.innerHeight - 110);
-      this.setState({ height: newHeight });
-    }
+  updateSize() {
+    const w = window.innerWidth
+      || document.documentElement.clientWidth
+      || document.body.clientWidth;
+
+    const h = window.innerHeight
+      || document.documentElement.clientHeight
+      || document.body.clientHeight;
+
+    this.setState({ height: h, width: w });
   }
 
   hideNewListDropdown() {
-    this.setState({ newListDropdownVisible: false })
+    this.setState({ newListDropdownVisible: false });
   }
 
   handleNewListDropdownChange(flag) {
     this.setState({ newListDropdownVisible: flag });
   }
 
+  showTaskDetailModal(task) {
+    this.setState({
+      taskDetailVisible: true,
+      selectedTask: task,
+      taskDetailKey: generateRandomKey(),
+    });
+  }
+
+  hideTaskDetailModal() {
+    this.setState({
+      taskDetailVisible: false,
+      selectedTaskId: null,
+    });
+  }
+
+  showSidebar() {
+    clearTimeout(this.boardDetailTimer);
+    this.setState({ sidebarVisible: true });
+    this.boardDetailTimer = setTimeout(() => {
+      this.setState({ boardDetailMargin: 250 });
+    }, 500);
+  }
+
+  hideSidebar() {
+    clearTimeout(this.boardDetailTimer);
+    this.setState({
+      sidebarVisible: false,
+      boardDetailMargin: 0,
+    });
+  }
+
   render() {
     const {
       isSignedIn, lists, isLoading,
       createList, createTask, params,
-      currentBoard, isCreatingList, isCreatingTask,
+      boardDetail, isCreatingList, isCreatingTask,
       creatingTaskError, creatingListError,
     } = this.props;
+
+    const {
+      newListDropdownVisible, taskDetailVisible, sidebarVisible,
+      height, boardDetailMargin, selectedTask, taskDetailKey,
+    } = this.state;
+
     const cardStyle = {
       margin: "10px",
       width: "300px",
@@ -73,15 +128,17 @@ export default class BoardList extends Component {
         creatingError={creatingListError}
       />
     );
+
     const listIndex = lists ?
       lists.map(list => (
         <ListCard
           list={list}
           key={list.id}
           createTask={createTask}
-          boardId={currentBoard.id}
+          boardId={boardDetail.id}
           isCreatingTask={isCreatingTask}
           creatingTaskError={creatingTaskError}
+          showTaskDetailModal={this.showTaskDetailModal}
         />)) : [];
     listIndex.push(
       <Card style={cardStyle} key="createlist">
@@ -89,7 +146,7 @@ export default class BoardList extends Component {
           overlay={newListForm}
           trigger={['click']}
           onVisibleChange={this.handleNewListDropdownChange}
-          visible={this.state.newListDropdownVisible}
+          visible={newListDropdownVisible}
         >
           <h2 style={{ color: "#2a71a5", cursor: "pointer" }}>
             <Icon style={{ margin: "10px" }} type="plus-square-o" />
@@ -98,16 +155,54 @@ export default class BoardList extends Component {
         </Dropdown>
       </Card>,
     );
+
+    const boardDetailStyle ={
+      marginRight: boardDetailMargin,
+      height: height - 110,
+    };
+
     return (
-      <div>
-        <div className="board-detail-title">
-          <h2>{ currentBoard && currentBoard.title }</h2>
+      <div className="board-detail-wrapper">
+        <div className="sidebar-switch">
+          <ReactCSSTransitionGroup
+            transitionName="sidebar-switch"
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={500}
+          >
+            {
+              !sidebarVisible && (
+              <Button onClick={this.showSidebar} ghost>
+                <Icon type="menu-fold" />Menu
+              </Button>
+              )
+            }
+          </ReactCSSTransitionGroup>
         </div>
-        <div className="board-detail-container" style={{height: this.state.height}}>
+        <div className="board-detail-title">
+          <h2>{ boardDetail && boardDetail.title }</h2>
+        </div>
+        <div className="board-detail-container" style={boardDetailStyle}>
           { isLoading ? <div style={{ height: "300px" }}><Spinner /></div> :
             listIndex
           }
         </div>
+        <ReactCSSTransitionGroup
+          transitionName="sidebar-switch"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={500}
+        >
+          {
+            sidebarVisible && (
+              <Sidebar hideSidebar={this.hideSidebar} style={{ height: this.state.height-50 }} />
+            )
+          }
+        </ReactCSSTransitionGroup>
+        <Modal
+          title={selectedTask && selectedTask.title} visible={taskDetailVisible}
+          onCancel={this.hideTaskDetailModal} footer={null} key={taskDetailKey}
+        >
+          <TaskDetail task={selectedTask} hideTaskDetailModal={this.hideTaskDetailModal} />
+        </Modal>
       </div>
     );
   }

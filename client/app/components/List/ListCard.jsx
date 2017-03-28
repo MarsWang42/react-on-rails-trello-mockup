@@ -21,12 +21,16 @@ export default class ListCard extends Component {
   }
 
   render() {
-    const { list, createTask, boardId, isCreatingTask, creatingTaskError } = this.props;
+    const {
+      list, createTask, boardId,
+      isCreatingTask, creatingTaskError, showTaskDetailModal,
+    } = this.props;
     const cardStyle = {
       margin: "10px",
       width: "250px",
       display: "inline-block",
       verticalAlign: "top",
+      backgroundColor: "#fbfbfb",
     };
     const bodyStyle = {
       padding: "12px 24px",
@@ -40,7 +44,7 @@ export default class ListCard extends Component {
     };
     const taskList = list.tasks.map(task => (
       <Row key={task.id}>
-        <Button style={taskStyle}>{ task.title }</Button>
+        <Button style={taskStyle} onClick={() => showTaskDetailModal(task)}>{ task.title }</Button>
       </Row>
       ),
     );

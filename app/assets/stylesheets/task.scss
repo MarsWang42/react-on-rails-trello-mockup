@@ -8,3 +8,19 @@
 .new-task-form-button {
   width: 100%;
 }
+.task-detail-container {
+  padding: 15px;
+}
+.task-detail-row {
+  padding: 5px;
+}
+.task-action-container {
+  text-align: center;
+  padding: 15px;
+  .action-button {
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+  }
+}

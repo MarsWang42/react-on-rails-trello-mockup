@@ -48,7 +48,7 @@ class NewListForm extends React.Component {
           {form.getFieldDecorator('title', {
             rules: [{ required: true, message: 'Please input title for the new List!' }],
           })(
-            <Input placeholder='Like "New Book"' />
+            <Input placeholder='Like "New Book"' autoFocus />
           )}
         </FormItem>
         <FormItem>

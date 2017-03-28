@@ -16,8 +16,8 @@ const configureStore = railsProps => (
 const onChangeRoute = (previousRoute, nextRoute) => {
   const pathRegex = /^board/;
   if (nextRoute.location.pathname.match(pathRegex)) {
-    document.body.className += "red-gradient-background";
-  } else document.body.className = "";
+    document.body.className = "red-gradient-background";
+  } else document.body.className = "body-background";
 };
 
 // See documentation for https://github.com/reactjs/react-redux.

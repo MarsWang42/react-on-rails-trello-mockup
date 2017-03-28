@@ -54,7 +54,7 @@ class NewTaskForm extends React.Component {
             creatingError && (
               <Alert
                 message="Error"
-                description={creatingError}
+                description="Failed to create a new Task."
                 type="error"
                 closable
               />

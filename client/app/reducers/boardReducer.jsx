@@ -16,6 +16,7 @@ const BoardReducer = (state = '', action) => {
       return { ...state,
         isLoading: true,
         list: [],
+        error: null,
       };
     case LOAD_BOARD_LIST_SUCCEED:
       return { ...state,
@@ -31,22 +32,24 @@ const BoardReducer = (state = '', action) => {
     case LOAD_BOARD_DETAIL:
       return { ...state,
         detailIsLoading: true,
-        currentBoard: {},
+        boardDetail: {},
+        detailError: null,
       };
     case LOAD_BOARD_DETAIL_SUCCEED:
       return { ...state,
         detailIsLoading: false,
-        currentBoard: action.data.currentBoard,
+        boardDetail: action.data.currentBoard,
       };
     case LOAD_BOARD_DETAIL_FAILED:
       return { ...state,
         detailIsLoading: false,
-        currentBoard: {},
+        boardDetail: {},
         detailError: action.data.error,
       };
     case CREATE_BOARD:
       return { ...state,
         isCreating: true,
+        creatingError: null,
       };
     case CREATE_BOARD_SUCCEED:
       return { ...state,

@@ -93,11 +93,14 @@ class Navbar extends Component {
             <a
               onClick={() => browserHistory.push('/')}
               href="/" className="navbar-logo" rel="noopener noreferrer"
-            >React App</a>
+            >
+              <img src="<%= asset_url('logo.svg') %>" alt="" />React App</a>
           </Menu.Item>
           { !isSignedIn &&
             <Menu.Item key="signup" className="float-right">
-              <a onClick={this.showSignUpModal} className="navbar-logo" rel="noopener noreferrer">Sign up</a>
+              <a onClick={this.showSignUpModal} rel="noopener noreferrer">
+                Sign up
+              </a>
               <Modal
                 title="Register Now!" visible={this.state.signUpVisible && !isSignedIn}
                 onCancel={this.hideSignUpModal} footer={null}
@@ -113,7 +116,9 @@ class Navbar extends Component {
           }
           { !isSignedIn &&
             <Menu.Item key="signin" className="float-right">
-              <a onClick={this.showSignInModal} className="navbar-logo" rel="noopener noreferrer">Sign in</a>
+              <a onClick={this.showSignInModal} rel="noopener noreferrer">
+                Sign in
+              </a>
               <Modal
                 title="Sign In" visible={this.state.signInVisible && !isSignedIn}
                 onCancel={this.hideSignInModal} footer={null}
