@@ -94,7 +94,9 @@ class Navbar extends Component {
               onClick={() => browserHistory.push('/')}
               href="/" className="navbar-logo" rel="noopener noreferrer"
             >
-              <img src="<%= asset_url('logo.svg') %>" alt="" />React App</a>
+              <img className="navbar-logo-icon" src="/logo.svg" alt=""></img>
+              <h2>momo</h2>
+            </a>
           </Menu.Item>
           { !isSignedIn &&
             <Menu.Item key="signup" className="float-right">

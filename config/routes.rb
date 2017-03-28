@@ -11,10 +11,11 @@ Rails.application.routes.draw do
     end
     resources :tasks, only: [:show]
   end
-  devise_for :users, path: "user",
-    :controllers => {
-      :sessions  => "users/sessions",
-      :registrations => "users/registrations",
-  }
+  devise_for :users, path: "user", :skip => [:sessions, :password, :registration]
+  as :user do
+    post "/user/sign_in" => "users/sessions#create", :as => :user_session
+    delete "/user/sign_out" => "users/sessions#destroy", :as => :destroy_user_session
+    post "/user" => "users/registrations#create", :as => :user_registration
+  end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

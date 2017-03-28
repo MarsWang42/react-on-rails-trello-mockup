@@ -56,3 +56,5 @@ gem 'react_on_rails'
 gem 'devise'
 
 gem 'mini_racer', platforms: :ruby
+
+gem "non-stupid-digest-assets"
