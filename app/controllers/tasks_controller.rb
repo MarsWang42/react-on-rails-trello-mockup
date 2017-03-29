@@ -20,6 +20,7 @@ class TasksController < ApplicationController
         :task => {
           :id => task.id,
           :title => task.title,
+          :description => task.description,
           :belongsTo => {
             :id => task.list.id,
             :title => task.list.title
@@ -55,8 +56,32 @@ class TasksController < ApplicationController
     end
   end
 
+  def update
+    respond_to :json, :html
+    user_boards = current_user.boards
+    task = Task.find(params[:id])
+    if user_boards.include? task.board and task.update(task_params)
+      render :json => {
+        :task => {
+          :id => task.id,
+          :title => task.title,
+          :description => task.description,
+          :belongsTo => {
+            :id => task.list.id,
+            :title => task.list.title
+          },
+          :updatedAt => "#{distance_of_time_in_words_to_now(task.updated_at)} ago",
+          :createdBy => task.creator.username
+        }
+      }, :status => 200
+    else render :json => {
+      :error => task.errors
+    }, :status => 404
+    end
+  end
+
   private
     def task_params
-      params.require(:task).permit(:title)
+      params.require(:task).permit(:title, :description)
     end
 end

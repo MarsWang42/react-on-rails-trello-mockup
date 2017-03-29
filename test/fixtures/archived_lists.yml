@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  archived_by: one
+  board: one
+  task: one
+
+two:
+  title: MyString
+  archived_by: two
+  board: two
+  task: two

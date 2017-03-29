@@ -2,10 +2,11 @@ Rails.application.routes.draw do
   root 'react_app#index'
   get 'board/:id', to: 'react_app#index'
   get 'tasks/:id/archive', to: 'archived_tasks#create'
+  get 'lists/:id/archive', to: 'archived_lists#create'
   authenticate :user do
     resources :boards, only: [:index, :create, :show, :edit, :update, :destroy] do
-      resources :lists, only: [:create], shallow: true do
-        resources :tasks, only: [:create]
+      resources :lists, only: [:create, :update], shallow: true do
+        resources :tasks, only: [:create, :update]
       end
       resources :archived_tasks, only: [:index]
     end

@@ -9,11 +9,13 @@ import {
   CREATE_TASK,
   CREATE_TASK_SUCCEED,
   CREATE_TASK_FAILED,
+  UPDATE_TASK,
+  UPDATE_TASK_SUCCEED,
+  UPDATE_TASK_FAILED,
   ARCHIVE_TASK,
   ARCHIVE_TASK_SUCCEED,
   ARCHIVE_TASK_FAILED,
 } from '../constants/taskConstants';
-import { loadBoardDetail } from './boardActionCreators';
 
 export const loadArchivedTasks = boardId => (
   (dispatch) => {
@@ -35,7 +37,28 @@ export const loadArchivedTasks = boardId => (
   }
 );
 
-export const createTask = ({ title }, listId, boardId) => (
+export const updateTask = ({ title, description, id }) => (
+  (dispatch) => {
+    dispatch({ type: UPDATE_TASK });
+    axios({
+      method: "PUT",
+      url: `/tasks/${id}`,
+      data: { title, description },
+    }).then((response) => {
+      dispatch({
+        type: UPDATE_TASK_SUCCEED,
+        data: response.data,
+      });
+    }).catch((response) => {
+      dispatch({
+        type: UPDATE_TASK_FAILED,
+        data: response.response.data,
+      });
+    });
+  }
+);
+
+export const createTask = ({ title }, listId, boardId, hideDropdown) => (
   (dispatch) => {
     dispatch({ type: CREATE_TASK });
     axios({
@@ -43,8 +66,11 @@ export const createTask = ({ title }, listId, boardId) => (
       url: `/lists/${listId}/tasks`,
       data: { title },
     }).then((response) => {
-      dispatch({ type: CREATE_TASK_SUCCEED });
-      dispatch(loadBoardDetail(boardId));
+      hideDropdown();
+      dispatch({
+        type: CREATE_TASK_SUCCEED,
+        data: response.data,
+      });
     }).catch((response) => {
       dispatch({
         type: CREATE_TASK_FAILED,
@@ -81,8 +107,10 @@ export const archiveTask = (id, boardId) => (
       method: "GET",
       url: `/tasks/${id}/archive`,
     }).then((response) => {
-      dispatch({ type: ARCHIVE_TASK_SUCCEED });
-      dispatch(loadBoardDetail(boardId));
+      dispatch({
+        type: ARCHIVE_TASK_SUCCEED,
+        data: response.data,
+      });
     }).catch((response) => {
       dispatch({
         type: ARCHIVE_TASK_FAILED,

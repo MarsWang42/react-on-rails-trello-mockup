@@ -2,6 +2,9 @@ import {
   CREATE_TASK,
   CREATE_TASK_SUCCEED,
   CREATE_TASK_FAILED,
+  UPDATE_TASK,
+  UPDATE_TASK_SUCCEED,
+  UPDATE_TASK_FAILED,
   LOAD_ARCHIVED_TASKS,
   LOAD_ARCHIVED_TASKS_SUCCEED,
   LOAD_ARCHIVED_TASKS_FAILED,
@@ -29,6 +32,21 @@ const TaskReducer = (state = '', action) => {
       return { ...state,
         isCreating: false,
         creatingError: action.data.error,
+      };
+    case UPDATE_TASK:
+      return { ...state,
+        isUpdating: true,
+        updatingError: null,
+      };
+    case UPDATE_TASK_SUCCEED:
+      return { ...state,
+        isUpdating: false,
+        taskDetail: action.data.task,
+      };
+    case UPDATE_TASK_FAILED:
+      return { ...state,
+        isUpdating: false,
+        updatingError: action.data.error,
       };
     case LOAD_ARCHIVED_TASKS:
       return { ...state,

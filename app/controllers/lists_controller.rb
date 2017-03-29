@@ -40,10 +40,32 @@ class ListsController < ApplicationController
     list.user = current_user
     if list.save
       render :json => {
-        :list => list
+        :list => {
+          :title => list.title,
+          :tasks => list.tasks,
+          :id => list.id,
+        }
       }, :status => 200
     else render :json => {
       :error => list.error
+    }, :status => 404
+    end
+  end
+
+  def update
+    respond_to :json, :html
+    user_boards = current_user.boards
+    list = List.find(params[:id])
+    if user_boards.include? list.board and list.update_attributes list_params
+      render :json => {
+        :list => {
+          :title => list.title,
+          :tasks => list.tasks,
+          :id => list.id,
+        }
+      }, :status => 200
+    else render :json => {
+      :error => list.errors
     }, :status => 404
     end
   end

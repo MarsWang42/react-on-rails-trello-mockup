@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Icon, Dropdown, Modal, Button } from 'antd';
+import { Card, Icon, Dropdown, Tooltip, Modal, Button } from 'antd';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ListCard from '../List/ListCard';
 import NewListForm from '../List/NewListForm';
@@ -104,7 +104,8 @@ export default class BoardList extends Component {
       isSignedIn, lists, isLoading,
       createList, createTask, params,
       boardDetail, isCreatingList, isCreatingTask,
-      creatingTaskError, creatingListError,
+      creatingTaskError, creatingListError, updateList,
+      updatingListError, archiveList,
     } = this.props;
 
     const {
@@ -129,16 +130,26 @@ export default class BoardList extends Component {
       />
     );
 
+    const archiveListButton = id => (
+      <Tooltip title="Archive this list.">
+        <Icon type="upload" className="archive-list-button" onClick={() => archiveList(id)} />
+      </Tooltip>
+    );
+
     const listIndex = lists ?
       lists.map(list => (
         <ListCard
           list={list}
           key={list.id}
+          extra={archiveListButton(list.id)}
           createTask={createTask}
           boardId={boardDetail.id}
           isCreatingTask={isCreatingTask}
           creatingTaskError={creatingTaskError}
           showTaskDetailModal={this.showTaskDetailModal}
+          hideSidebar={this.hideSidebar}
+          updateList={updateList}
+          updatingError={updatingListError}
         />)) : [];
     listIndex.push(
       <Card style={cardStyle} key="createlist">
@@ -156,10 +167,14 @@ export default class BoardList extends Component {
       </Card>,
     );
 
-    const boardDetailStyle ={
+    const boardDetailStyle = {
       marginRight: boardDetailMargin,
       height: height - 110,
     };
+
+    const taskDetailTitle = (
+      <div className="task-detail-title">{selectedTask && selectedTask.title}</div>
+    );
 
     return (
       <div className="board-detail-wrapper">
@@ -179,12 +194,19 @@ export default class BoardList extends Component {
           </ReactCSSTransitionGroup>
         </div>
         <div className="board-detail-title">
+          <Icon type="book" />
           <h2>{ boardDetail && boardDetail.title }</h2>
         </div>
         <div className="board-detail-container" style={boardDetailStyle}>
-          { isLoading ? <div style={{ height: "300px" }}><Spinner /></div> :
-            listIndex
-          }
+          { isLoading ? <div style={{ height: "300px" }}><Spinner /></div> : (
+            <ReactCSSTransitionGroup
+              transitionName="list-index"
+              transitionEnterTimeout={500}
+              transitionLeaveTimeout={1000}
+            >
+              { listIndex }
+            </ReactCSSTransitionGroup>
+          )}
         </div>
         <ReactCSSTransitionGroup
           transitionName="sidebar-switch"
@@ -198,7 +220,7 @@ export default class BoardList extends Component {
           }
         </ReactCSSTransitionGroup>
         <Modal
-          title={selectedTask && selectedTask.title} visible={taskDetailVisible}
+          title={ taskDetailTitle } visible={taskDetailVisible} width={700}
           onCancel={this.hideTaskDetailModal} footer={null} key={taskDetailKey}
         >
           <TaskDetail task={selectedTask} hideTaskDetailModal={this.hideTaskDetailModal} />

@@ -10,7 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170327224829) do
+ActiveRecord::Schema.define(version: 20170329004051) do
+
+  create_table "archived_lists", force: :cascade do |t|
+    t.string   "title"
+    t.integer  "original_id"
+    t.integer  "archived_by_id"
+    t.integer  "board_id"
+    t.integer  "task_id"
+    t.integer  "archived_task_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["archived_by_id"], name: "index_archived_lists_on_archived_by_id"
+    t.index ["archived_task_id"], name: "index_archived_lists_on_archived_task_id"
+    t.index ["board_id"], name: "index_archived_lists_on_board_id"
+    t.index ["task_id"], name: "index_archived_lists_on_task_id"
+  end
 
   create_table "archived_tasks", force: :cascade do |t|
     t.string   "title"
@@ -49,6 +64,7 @@ ActiveRecord::Schema.define(version: 20170327224829) do
 
   create_table "tasks", force: :cascade do |t|
     t.string   "title"
+    t.text     "description"
     t.integer  "board_id"
     t.integer  "list_id"
     t.integer  "assignee_id"

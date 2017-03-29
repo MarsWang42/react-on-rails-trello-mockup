@@ -10,6 +10,7 @@ import {
   CREATE_BOARD_SUCCEED,
   CREATE_BOARD_FAILED,
 } from '../constants/boardConstants';
+import { browserHistory } from 'react-router';
 
 export const loadBoardList = () => (
   (dispatch) => {
@@ -42,12 +43,7 @@ export const loadBoardDetail = id => (
         type: LOAD_BOARD_DETAIL_SUCCEED,
         data: response.data,
       });
-    }).catch((response) => {
-      dispatch({
-        type: LOAD_BOARD_DETAIL_FAILED,
-        data: response.response.data,
-      });
-    });
+    })
   }
 );
 
@@ -60,8 +56,9 @@ export const createBoard = ({ title }, hideBoardModal) => (
       data: { title },
     }).then((response) => {
       hideBoardModal();
-      dispatch({ type: CREATE_BOARD_SUCCEED })
+      dispatch({ type: CREATE_BOARD_SUCCEED });
       dispatch(loadBoardList());
+      browserHistory.push('/');
     }).catch((response) => {
       dispatch({
         type: CREATE_BOARD_FAILED,

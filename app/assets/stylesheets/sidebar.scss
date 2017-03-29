@@ -1,44 +1,9 @@
-.sidebar-switch {
-  top: 20px;
-  right: 20px;
-  position: absolute;
-}
-.sidebar-switch-enter {
-  opacity: 0.01;
-  -webkit-transform: translate(100%);
-      -ms-transform: translate(100%);
-          transform: translate(100%);
-}
-.sidebar-switch-enter.sidebar-switch-enter-active {
-  -webkit-transform: translate(0%);
-      -ms-transform: translate(0%);
-          transform: translate(0%);
-  opacity: 1;
-  transition: opacity 500ms, -webkit-transform 500ms;
-  transition: transform 500ms, opacity 500ms;
-  transition: transform 500ms, opacity 500ms, -webkit-transform 500ms;
-}
-.sidebar-switch-leave {
-  opacity: 1;
-  -webkit-transform: translate(0%);
-      -ms-transform: translate(0%);
-          transform: translate(0%);
-}
-.sidebar-switch-leave.sidebar-switch-leave-active {
-  opacity: 0.01;
-  -webkit-transform: translate(100%);
-      -ms-transform: translate(100%);
-          transform: translate(100%);
-  transition: opacity 500ms, -webkit-transform 500ms;
-  transition: transform 500ms, opacity 500ms;
-  transition: transform 500ms, opacity 500ms, -webkit-transform 500ms;
-}
 .sidebar-container {
   position: absolute;
   width: 250px;
   top: 0;
   right: 0;
-  overflow: hidden;
+  overflow: auto;
   background: -moz-linear-gradient(top, #fffbe6, #9fdcf9);
   background: -webkit-gradient(linear, 0 0, 0 bottom, from(#fffbe6), to(#9fdcf9));
   background: -o-linear-gradient(top, #fffbe6, #9fdcf9);
@@ -92,6 +57,42 @@
       color: #108ee9;
     }
   }
+}
+
+.sidebar-switch {
+  top: 20px;
+  right: 20px;
+  position: absolute;
+}
+.sidebar-switch-enter {
+  opacity: 0.01;
+  -webkit-transform: translate(100%);
+      -ms-transform: translate(100%);
+          transform: translate(100%);
+}
+.sidebar-switch-enter.sidebar-switch-enter-active {
+  -webkit-transform: translate(0%);
+      -ms-transform: translate(0%);
+          transform: translate(0%);
+  opacity: 1;
+  transition: opacity 500ms, -webkit-transform 500ms;
+  transition: transform 500ms, opacity 500ms;
+  transition: transform 500ms, opacity 500ms, -webkit-transform 500ms;
+}
+.sidebar-switch-leave {
+  opacity: 1;
+  -webkit-transform: translate(0%);
+      -ms-transform: translate(0%);
+          transform: translate(0%);
+}
+.sidebar-switch-leave.sidebar-switch-leave-active {
+  opacity: 0.01;
+  -webkit-transform: translate(100%);
+      -ms-transform: translate(100%);
+          transform: translate(100%);
+  transition: opacity 500ms, -webkit-transform 500ms;
+  transition: transform 500ms, opacity 500ms;
+  transition: transform 500ms, opacity 500ms, -webkit-transform 500ms;
 }
 
 .sidebar-main-animation-enter {

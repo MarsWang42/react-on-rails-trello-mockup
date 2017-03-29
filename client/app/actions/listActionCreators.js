@@ -6,9 +6,13 @@ import {
   CREATE_LIST,
   CREATE_LIST_SUCCEED,
   CREATE_LIST_FAILED,
+  UPDATE_LIST,
+  UPDATE_LIST_SUCCEED,
+  UPDATE_LIST_FAILED,
+  ARCHIVE_LIST,
+  ARCHIVE_LIST_SUCCEED,
+  ARCHIVE_LIST_FAILED,
 } from '../constants/listConstants';
-import { loadBoardDetail } from './boardActionCreators';
-
 
 export const createList = ({ title }, boardId, hideDropdown) => (
   (dispatch) => {
@@ -19,13 +23,51 @@ export const createList = ({ title }, boardId, hideDropdown) => (
       data: { title },
     }).then((response) => {
       hideDropdown();
-      dispatch({ type: CREATE_LIST_SUCCEED });
-      dispatch(loadBoardDetail(boardId));
+      dispatch({
+        type: CREATE_LIST_SUCCEED,
+        data: response.data,
+      });
     }).catch((response) => {
       dispatch({
         type: CREATE_LIST_FAILED,
         data: response.response.data,
       });
     });
+  }
+);
+
+export const updateList = ({ title, id }) => (
+  (dispatch) => {
+    dispatch({ type: UPDATE_LIST });
+    axios({
+      method: "PUT",
+      url: `/lists/${id}`,
+      data: { title },
+    }).then((response) => {
+      dispatch({
+        type: UPDATE_LIST_SUCCEED,
+        data: response.data,
+      });
+    }).catch((response) => {
+      dispatch({
+        type: UPDATE_LIST_FAILED,
+        data: response.response.data,
+      });
+    });
+  }
+);
+
+export const archiveList = (id, boardId) => (
+  (dispatch) => {
+    dispatch({ type: ARCHIVE_LIST });
+    axios({
+      method: "GET",
+      url: `/lists/${id}/archive`,
+    }).then((response) => {
+      dispatch({
+        type: ARCHIVE_LIST_SUCCEED,
+        data: response.data,
+      });
+    })
   }
 );

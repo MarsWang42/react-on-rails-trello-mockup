@@ -40,13 +40,18 @@ export default class Sidebar extends Component {
       fontSize: "11px",
       color: "#777777",
     };
+    const dateToString = (date) => {
+      const dateString = new Date(date);
+      return ((dateString.getMonth() + 1) + '/' + dateString.getDate() + '/' +  dateString.getFullYear());
+    };
     const archivedTaskList = () => {
       if (!archivedTasks || !archivedTasks.length) {
         return <Alert message="Currently no archived tasks." type="info" style={{ margin: "15px" }} />;
       } else {
         return archivedTasks.map(archivedTask => (
           <Card title={archivedTask.title} key={archivedTask.id} style={cardStyle} bodyStyle={bodyStyle}>
-            Your archived task.
+            <Row>In list: { archivedTask.list && archivedTask.list.title }</Row>
+            <Row>Archived at: { dateToString(archivedTask.archivedAt) }</Row>
           </Card>
         ));
       }

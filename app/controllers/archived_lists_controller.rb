@@ -1,4 +1,4 @@
-class ArchivedTasksController < ApplicationController
+class ArchivedListsController < ApplicationController
   skip_before_action :verify_authenticity_token
   include ActionView::Helpers::DateHelper
 
@@ -7,7 +7,7 @@ class ArchivedTasksController < ApplicationController
     begin
       board = current_user.boards.find(params[:board_id])
       render :json => {
-        :archivedTasks => board.archived_tasks.map { |task| {
+        :archivedLists => board.archived_tasks.map { |task| {
           :title => task.title,
           :id => task.id,
           :list => {
@@ -46,32 +46,30 @@ class ArchivedTasksController < ApplicationController
 
   def create
     respond_to :json, :html
-    task = Task.find(params[:id])
+    list = List.find(params[:id])
     user_boards = current_user.boards
-    if (user_boards.include? task.board)
-      archived_task = ArchivedTask.new()
-      archived_task.list = task.list
-      archived_task.title = task.title
-      archived_task.board = task.board
-      archived_task.archived_by = current_user
-      original_id = task.id
-      task.destroy
-      if archived_task.save
+    if (user_boards.include? list.board)
+      archived_list = ArchivedList.new()
+      archived_list.title = list.title
+      archived_list.board = list.board
+      archived_list.original_id = list.id
+      archived_list.archived_by = current_user
+      list.destroy
+      if archived_list.save
         render :json => {
-          :archivedTask => {
-            originalId: original_id,
-            listId: archived_task.list.id
+          :archivedList => {
+            :originalId => archived_list.original_id
           }
         }, :status => 200
       else render :json => {
-        :error => archived_task.errors
+        :error => archived_list.errors
       }, :status => 404
       end
     end
   end
 
   private
-    def task_params
-      params.require(:task).permit(:title)
+    def list_params
+      params.require(:list).permit(:title)
     end
 end
